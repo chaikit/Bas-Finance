@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                                  Test-Script.mq5 |
+//|                                                         sell.mq5 |
 //|                                  Copyright 2024, MetaQuotes Ltd. |
 //|                                             https://www.mql5.com |
 //+------------------------------------------------------------------+
@@ -14,9 +14,9 @@ void OnStart()
 //---
    double Pip_sl = 500 * Point();
    double Pip_tp = 750 * Point();
-   double Ask = SymbolInfoDouble(_Symbol,SYMBOL_ASK);
-   double StopLoss = Ask - Pip_sl;
-   double Profit = Ask + Pip_tp;
+   double Bid = SymbolInfoDouble(_Symbol,SYMBOL_BID);
+   double StopLoss = Bid + Pip_sl;
+   double Profit = Bid - Pip_tp;
    
    //create request & result data
    MqlTradeRequest request = {};
@@ -26,8 +26,8 @@ void OnStart()
    request.action = TRADE_ACTION_DEAL; 
    request.symbol = _Symbol;
    request.volume = 0.1;
-   request.type = ORDER_TYPE_BUY;
-   request.price = SymbolInfoDouble(Symbol(),SYMBOL_ASK);
+   request.type = ORDER_TYPE_SELL;
+   request.price = SymbolInfoDouble(Symbol(),SYMBOL_BID);
    request.sl = StopLoss;
    request.tp = Profit;
    request.type_time = ORDER_TIME_GTC;
@@ -36,7 +36,5 @@ void OnStart()
    //--- send order the request
    if(!OrderSend(request,result))
       PrintFormat("OrderSend error %d",GetLastError()); 
-
-   
   }
 //+------------------------------------------------------------------+
